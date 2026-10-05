@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>ANCDA - 白噪音</title>
+    <meta name="description" content="ANCDA 白噪音环境音混合器，自由混合环境音，创造你的宁静时刻。">
+    <meta name="keywords" content="ambient sounds, sound mixer, focus sounds, sleep sounds, rain sounds, white noise, relaxation app">
+    <meta name="author" content="ANCDA">
+
+    <!-- Open Graph (no image) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ANCDA - 白噪音">
+    <meta property="og:description" content="自由混合环境音，创造你的宁静时刻。">
+    <meta property="og:site_name" content="ANCDA">
+
+    <!-- Twitter / X (no image) -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ANCDA - 白噪音">
+    <meta name="twitter:description" content="自由混合环境音，创造你的宁静时刻。">
+
+    <!-- Search engine behavior -->
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
+    <!-- UI / Theme -->
+    <meta name="theme-color" content="#05070a">
+    <meta name="color-scheme" content="dark">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Animated Background Canvas -->
+    <canvas id="particle-canvas"></canvas>
+    <div id="gradient-overlay"></div>
+
+    <header>
+        <h1>ANCDA</h1>
+        <p class="subtitle">自由混合环境音，创造你的宁静时刻</p>
+    </header>
+
+    <main id="sound-grid" class="grid-container">
+    </main>
+
+    <footer class="controls">
+        <div class="preset-group">
+            <button onclick="applyPreset('focus')">风雨</button>
+            <button onclick="applyPreset('sleep')">睡眠</button>
+            <button onclick="applyPreset('rainyNight')">雷雨</button>
+            <button onclick="applyPreset('forestCalm')">森林</button>
+            <button onclick="applyPreset('meditation')">冥想</button>
+        </div>
+
+        <div class="global-actions">
+            <button id="master-play-pause" class="primary-btn" onclick="toggleAll()">暂停</button>
+            <button class="secondary-btn" onclick="resetMix()">重置</button>
+            <button id="music-toggle" class="secondary-btn" onclick="toggleMusic()">音乐</button>
+            <button id="fullscreen-toggle" class="secondary-btn" onclick="toggleFullscreen()">全屏</button>
+        </div>
+
+        <p class="footer-credit">
+            点击声音卡片开关，拖动滑块调节音量
+        </p>
+
+    </footer>
+
+    <div id="audio-container" style="display: none;">
+        <audio id="audio-rain" loop preload="none"></audio>
+        <audio id="audio-thunder" loop preload="none"></audio>
+        <audio id="audio-wind" loop preload="none"></audio>
+        <audio id="audio-forest" loop preload="none"></audio>
+        <audio id="audio-night" loop preload="none"></audio>
+        <audio id="audio-river" loop preload="none"></audio>
+        <audio id="audio-train" loop preload="none"></audio>
+        <audio id="audio-fire" loop preload="none"></audio>
+        <audio id="audio-music" loop preload="none"></audio>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

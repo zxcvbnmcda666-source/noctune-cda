@@ -1,0 +1,513 @@
+:root {
+    --bg-color: #05070a;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --accent: #4fd1c5;
+    --text-main: #e2e8f0;
+    --text-dim: #94a3b8;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Crimson Pro', Georgia, serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
+}
+
+/* ================================
+   PARTICLE CANVAS & GRADIENT
+   ================================ */
+
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#gradient-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(circle at center, rgba(15, 23, 42, 0.3) 0%, rgba(5, 7, 10, 0.8) 100%);
+    transition: background 3s ease-in-out;
+}
+
+/* ================================
+   MAIN CONTENT LAYER
+   ================================ */
+
+header, main, footer {
+    position: relative;
+    z-index: 10;
+}
+
+header {
+    text-align: center;
+    padding: 50px 20px 40px;
+    animation: fadeIn 2s ease;
+}
+
+h1 {
+    font-size: 3.5rem;
+    letter-spacing: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 38%, #8b5cf6 72%, #f472b6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(34, 211, 238, 0.16);
+}
+
+.subtitle {
+    color: var(--text-dim);
+    font-weight: 300;
+    letter-spacing: 0.15rem;
+    font-size: 1.1rem;
+}
+
+/* ================================
+   GRID LAYOUT
+   ================================ */
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    max-width: 1000px;
+    width: 90%;
+    padding-bottom: 160px;
+    margin-top: -20px;
+}
+
+@media (max-width: 900px) { 
+    .grid-container { 
+        grid-template-columns: repeat(2, 1fr); 
+    } 
+}
+
+@media (max-width: 500px) { 
+    .grid-container { 
+        grid-template-columns: 1fr; 
+    } 
+}
+
+/* ================================
+   SOUND CARDS - GLASSMORPHISM
+   ================================ */
+
+.sound-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 28px 35px;
+    text-align: center;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle inner glow */
+.sound-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.05), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.sound-card:hover::before {
+    opacity: 1;
+}
+
+.sound-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+/* Active state with dynamic glow */
+.sound-card.active {
+    border-color: var(--card-accent, var(--accent));
+    box-shadow: 
+        0 0 30px rgba(79, 209, 197, 0.15),
+        0 0 60px var(--card-glow, rgba(79, 209, 197, 0.1)),
+        0 10px 30px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.06);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sound-card.active::before {
+    opacity: 0.6;
+}
+
+.icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.sound-card:hover .icon {
+    transform: scale(1.1);
+}
+
+.name { 
+    font-weight: 400; 
+    color: var(--text-dim); 
+    font-size: 0.95rem;
+    letter-spacing: 0.05rem;
+}
+
+/* ================================
+   SLIDERS - ENHANCED
+   ================================ */
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) inset;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: var(--text-main);
+    cursor: grab;
+    margin-top: -6.5px;
+    transition: var(--transition);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+input[type=range]::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.2);
+}
+
+.sound-card.active input[type=range]::-webkit-slider-thumb {
+    background: var(--card-accent, var(--accent));
+    box-shadow: 
+        0 4px 12px var(--card-glow, rgba(79, 209, 197, 0.4)),
+        0 0 20px var(--card-glow, rgba(79, 209, 197, 0.3));
+}
+
+/* Firefox slider support */
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+}
+
+input[type=range]::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: var(--text-main);
+    cursor: grab;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sound-card.active input[type=range]::-moz-range-thumb {
+    background: var(--card-accent, var(--accent));
+}
+
+/* ================================
+   CONTROLS BAR
+   ================================ */
+
+footer.controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 30px;
+    background: linear-gradient(transparent, rgba(5, 7, 10, 0.95));
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.preset-group, .global-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-dim);
+    padding: 10px 22px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'Space Mono', monospace;
+    backdrop-filter: blur(10px);
+}
+
+button:hover {
+    border-color: var(--text-main);
+    color: var(--text-main);
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+button:active { 
+    transform: translateY(0px); 
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+    color: #05070a;
+    border: none;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(79, 209, 197, 0.3);
+}
+
+.primary-btn:hover {
+    background: linear-gradient(135deg, #5de4d7 0%, #4fd1c5 100%);
+    color: #05070a;
+    box-shadow: 0 8px 20px rgba(79, 209, 197, 0.4);
+    transform: translateY(-2px);
+}
+
+.primary-btn:active {
+    transform: translateY(0px);
+}
+
+.footer-credit {
+    margin-top: auto;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    opacity: 0.6;
+    font-family: 'Crimson Pro', serif;
+}
+
+.footer-credit a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.footer-credit a:hover {
+    text-decoration: underline;
+    opacity: 1;
+}
+
+/* ================================
+   ANIMATIONS
+   ================================ */
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-20px);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+    }
+}
+
+/* ================================
+   MOBILE IMPROVEMENTS
+   ================================ */
+
+@media (max-width: 768px) {
+
+    header {
+        padding: 36px 16px 26px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        letter-spacing: 0.4rem;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+    }
+
+    .grid-container {
+        gap: 16px;
+        padding-bottom: 60px;
+    }
+
+    .sound-card {
+        padding: 22px;
+        border-radius: 18px;
+    }
+
+    .icon {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+    }
+
+    .name {
+        font-size: 0.85rem;
+    }
+
+    input[type=range] {
+        height: 26px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        width: 20px;
+        height: 20px;
+        margin-top: -7.5px;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+    }
+
+    footer.controls {
+        position: relative;
+        width: 100%;
+        padding: 26px 16px 30px;
+        gap: 14px;
+        background: linear-gradient(
+            to top,
+            rgba(5, 7, 10, 0.95),
+            rgba(5, 7, 10, 0.7),
+            transparent
+        );
+    }
+
+    .preset-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        width: 100%;
+    }
+
+    .global-actions {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .global-actions button {
+        flex: 1;
+    }
+
+    button {
+        padding: 10px 0;
+        font-size: 0.7rem;
+    }
+
+    .primary-btn {
+        padding: 12px 0;
+        font-size: 0.75rem;
+    }
+
+    .footer-credit {
+        margin-top: 10px;
+        font-size: 0.6rem;
+        text-align: center;
+        opacity: 0.4;
+    }
+}
+
+@media (max-width: 420px) {
+
+    h1 {
+        font-size: 1.7rem;
+        letter-spacing: 0.3rem;
+    }
+
+    .sound-card {
+        padding: 20px;
+    }
+
+    .preset-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ================================
+   PERFORMANCE OPTIMIZATION
+   ================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
